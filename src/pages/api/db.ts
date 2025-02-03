@@ -28,8 +28,9 @@ export default async function handler(
       id: number
       title: string
       description: string
-      submitter: Submitter | null
+      submitter: string | Submitter | null
     }>(YED_HEADS_SHEET, 'submissions!A:D')
+
     const allMembers = await get_result_from_sheet<Submitter>(
       YED_HEADS_SHEET,
       'members!A:AA'
@@ -44,7 +45,6 @@ export default async function handler(
     res.json(results)
   }
   if (req.method == 'POST') {
-    console.log(req.body)
     const { title, description, submitter } = req.body
 
     if (!title || !description || !submitter) {

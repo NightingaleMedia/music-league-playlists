@@ -2,17 +2,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { google, drive_v3, sheets_v4 } from 'googleapis'
 
-const TOKEN_PATH = 'google-creds.json'
-
 export const SCOPES = [
   'https://www.googleapis.com/auth/spreadsheets',
   'https://www.googleapis.com/auth/drive',
 ]
 
 export const auth = new google.auth.GoogleAuth({
-  keyFile: TOKEN_PATH,
   scopes: SCOPES,
 })
+console.log(auth)
 export const SHEETS: sheets_v4.Sheets = google.sheets({
   version: 'v4',
   auth: auth,
@@ -29,7 +27,9 @@ export const get_json_from_result = (values: any[]): any => {
   const v = values.map((v: any, rowNumber) => {
     const singleValue = {}
     v.forEach((value: any, index: any) => {
+      // @ts-expect-error intended
       singleValue[headers[index]] = value
+      // @ts-expect-error intended
       singleValue['id'] = rowNumber + 1
     })
     return singleValue
@@ -53,6 +53,7 @@ export async function update_rows(
     },
     (err: any, res: any) => {
       if (err) return
+      return res
     }
   )
 }

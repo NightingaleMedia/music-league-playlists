@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Submission } from '@/pages/api/db'
+import { customSort } from '@/util/sortManual'
 
 export const useGetAllSubmissions = (): {
   loading: boolean
@@ -12,8 +13,12 @@ export const useGetAllSubmissions = (): {
     fetch('/api/db')
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
-        setSubs(res)
+        const sorted = customSort(
+          res,
+          ['inthequeue', 'upcoming', 'completed'],
+          'status'
+        )
+        setSubs(sorted)
       })
       .finally(() => setLoading(false))
   }, [])
